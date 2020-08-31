@@ -1,0 +1,66 @@
+---
+version: '3.8'
+services:
+
+  app:
+    image: milvusdb/item-based-recommend:gpu-latest
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    container_name: ${NAMESPACE}-recommender        
+    ports:
+    - 5005:5005
+    environment:
+    - FLASK_RUN_PORT=5005
+    networks:
+    - web
+    - internal
+    restart: unless-stopped
+
+  milvus:
+    image: milvusdb/milvus:cpu-latest
+    container_name: ${NAMESPACE}-milvus
+    ports:
+    - 19530:19530
+    - 19121:19121
+    volumes:
+    - ./.config/milvus:/var/lib/milvus/conf
+    - ./shared/logs/milvus:/var/lib/milvus/logs
+    - milvus-db:/var/lib/milvus/db
+    - milvus-wal:/var/lib/milvus/wal
+    networks:
+    - web
+    - internal
+    restart: unless-stopped
+
+  mysql:
+    image: seoz/mysql-multi:5-ubuntu
+    build:
+      context: .docker/storage/mysql5-multi
+      dockerfile: Dockerfile
+    container_name: ${NAMESPACE}-multidb
+    ports:
+    - 3308:3306
+    volumes:
+    - db-data:/var/lib/mysql
+    - ./.config/mysql/milvus.cnf:/etc/mysql/conf.d/my.cnf
+    # - ${PWD}/shared/export/:/var/lib/mysql/export/
+    networks:
+    - internal
+    - web
+    environment:
+      MYSQL_MULTIPLE_DATABASES: milvus
+      MYSQL_PASSWORD: ${MILVUS_MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MILVUS_MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MILVUS_MYSQL_USER}
+    restart: unless-stopped
+
+networks:
+  internal:
+    driver: bridge
+  web:
+    external: true
+
+volumes:
+  milvus-db:
+  milvus-wal:
