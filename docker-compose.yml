@@ -9,9 +9,19 @@ services:
       dockerfile: Dockerfile
     container_name: ${NAMESPACE}-recommender        
     ports:
-    - 5005:5005
+    - 8000:8000
     environment:
-    - FLASK_RUN_PORT=5005
+    # - FLASK_RUN_PORT=8000
+      - MILVUS_HOST=milvus
+      - MILVUS_PORT=19530
+      - BERT_HOST=127.0.0.1
+      - BERT_PORT=5555
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=${MILVUS_MYSQL_USER}
+      - MYSQL_PASSWORD=${MILVUS_MYSQL_PASSWORD}
+      - MYSQL_DATABASE=milvus
+      - TABLE_NAME=recommend
     networks:
     - web
     - internal
@@ -62,5 +72,6 @@ networks:
     external: true
 
 volumes:
+  db-data:
   milvus-db:
   milvus-wal:

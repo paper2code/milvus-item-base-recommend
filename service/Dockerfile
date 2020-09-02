@@ -1,1 +1,17 @@
-FROM 
+FROM tensorflow/tensorflow:1.14.0-gpu-py3
+
+RUN apt-get update && \
+    apt-get install -y nano bash jq git ca-certificates gcc g++ wget
+
+WORKDIR /opt/service
+COPY . .
+
+RUN pip3 install -U pip && \
+    pip3 install -r requirements.txt
+
+RUN mkdir -p /opt/service/model \
+    && cd /opt/service/model \
+    && wget https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip \
+    && unzip uncased_L-12_H-768_A-12.zip
+
+CMD ["./docker-entrypoint.sh"]
