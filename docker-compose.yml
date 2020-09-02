@@ -25,6 +25,9 @@ services:
     depends_on:
     - milvus
     - mysql
+    links:
+    - milvus
+    - mysql
     networks:
     - web
     - internal
