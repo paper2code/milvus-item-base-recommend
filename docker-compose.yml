@@ -39,6 +39,8 @@ services:
     ports:
     - 19530:19530
     - 19121:19121
+    depends_on:
+    - mysql
     volumes:
     - ./.config/milvus:/var/lib/milvus/conf
     - ./shared/logs/milvus:/var/lib/milvus/logs
