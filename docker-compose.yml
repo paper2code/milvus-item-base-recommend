@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   milvus:
-    image: milvusdb/milvus:cpu-latest
+    image: milvusdb/milvus:gpu-latest
     container_name: ${NAMESPACE}-milvus
     ports:
     - 19530:19530

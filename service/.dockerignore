@@ -2,3 +2,5 @@ model
 model/
 model/*
 model/**
+Dockerfile*
+docker-compose.*

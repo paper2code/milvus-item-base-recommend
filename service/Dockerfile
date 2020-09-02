@@ -1,7 +1,8 @@
-FROM tensorflow/tensorflow:1.14.0-gpu-py3
+# FROM tensorflow/tensorflow:1.14.0-gpu-py3
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
 RUN apt-get update && \
-    apt-get install -y nano bash jq git ca-certificates gcc g++ wget
+    apt-get install -y nano bash jq git ca-certificates gcc g++ wget python3-dev python3-pip unzip
 
 WORKDIR /opt/service
 COPY . .
