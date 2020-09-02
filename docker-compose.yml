@@ -22,6 +22,9 @@ services:
       - MYSQL_PASSWORD=${MILVUS_MYSQL_PASSWORD}
       - MYSQL_DATABASE=milvus
       - TABLE_NAME=recommend
+    depends_on:
+    - milvus
+    - mysql
     networks:
     - web
     - internal
