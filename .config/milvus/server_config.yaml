@@ -35,7 +35,8 @@ cluster:
 #----------------------+------------------------------------------------------------+------------+-----------------+
 general:
   timezone: UTC+8
-  meta_uri:  mysql://milvus:supermilvusitas@mysql:3306/milvus # sqlite://:@:/
+  meta_uri:  sqlite://:@:/
+  # mysql://root:megamilvusitas@mysql:3306/milvus 
 
 #----------------------+------------------------------------------------------------+------------+-----------------+
 # Network Config       | Description                                                | Type       | Default         |

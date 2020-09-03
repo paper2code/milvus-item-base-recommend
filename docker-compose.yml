@@ -41,6 +41,8 @@ services:
     - 19121:19121
     depends_on:
     - mysql
+    links:
+    - mysql
     volumes:
     - ./.config/milvus:/var/lib/milvus/conf
     - ./shared/logs/milvus:/var/lib/milvus/logs
