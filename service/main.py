@@ -34,7 +34,7 @@ def init_bc_client():
 
 @app.post('/insert/{data_path}')
 async def do_insert_api(data_path: str):	
-	data_path = "/opt/services/data/"+data_path
+	data_path = "/opt/service/data/"+data_path
 	print("data_path", data_path)
 	try:
 		conn, cursor = init_conn()
