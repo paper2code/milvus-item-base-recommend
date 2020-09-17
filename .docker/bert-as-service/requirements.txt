@@ -1,0 +1,3 @@
+bert-serving-server
+bert-serving-client
+tensorflow==1.14.0

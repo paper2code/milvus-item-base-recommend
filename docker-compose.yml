@@ -3,18 +3,29 @@ version: '3.8'
 services:
 
   app:
+    image: tumao/paper-recommend-demo:latest
+    container_name: ${NAMESPACE}-demo
+    ports: 
+    - 9999:80
+    environment:
+    - API_URL=http://api:8000
+    depends_on:
+    - api
+    networks:
+    - web
+    - internal
+    restart: unless-stopped
+
+  load: &arxiv_base
     image: milvusdb/item-based-recommend:gpu-latest
     build:
       context: ./service
       dockerfile: Dockerfile
-    container_name: ${NAMESPACE}-recommender        
-    ports:
-    - 8000:8000
     environment:
     # - FLASK_RUN_PORT=8000
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
-      - BERT_HOST=127.0.0.1
+      - BERT_HOST=bert
       - BERT_PORT=5555
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
@@ -23,19 +34,36 @@ services:
       - MYSQL_DATABASE=milvus
       - TABLE_NAME=recommend
     volumes:
-    # - ./model:/opt/service/model
     - ./data:/opt/service/data
+    # - ./model:/opt/service/model
     # - ./service:/opt/service/
     depends_on:
     - milvus
     - mysql
+    - bert
     links:
     - milvus
     - mysql
     networks:
     - web
     - internal
+    command: ["./docker-entrypoint.sh", "load"]
+ 
+  api:
+    <<: *arxiv_base
+    ports:
+    - 8000:8000
     restart: unless-stopped
+    command: ["./docker-entrypoint.sh"]
+
+  bert:
+    image: bert-as-service:latest
+    container_name: ${NAMESPACE}-bert
+    build:
+      context: .docker/bert-as-service
+      dockerfile: Dockerfile
+    ports:
+    - 5555:5555   
 
   milvus:
     image: milvusdb/milvus:gpu-latest

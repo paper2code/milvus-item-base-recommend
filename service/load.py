@@ -11,7 +11,6 @@ import sys, getopt
 
 index_client = milvus_client()
 
-
 def init_conn():
     conn = connect_mysql()
     cursor = conn.cursor()
@@ -25,8 +24,6 @@ def insert_data(data_path):
         return "{0}".format(status)
     except Exception as e:
         return "{0}".format(e)
-
-
 
 def main():
     try:
