@@ -47,10 +47,15 @@ def milvus_collection_data(client):
 		print("get milvus rows error:", e)
 
 def do_insert(data_path,index_client, conn, cursor, bc):
-	data_rows = milvus_collection_data(index_client)
-	data_dict = read_data(data_path, data_rows)
-	record_temp_file(data_dict,temp_file_path)
+	print("init_table")
 	init_table(index_client, conn, cursor)
+	print("data_rows")
+	data_rows = milvus_collection_data(index_client)
+	print("data_dict")
+	data_dict = read_data(data_path, data_rows)
+	print("record_temp_file")
+	record_temp_file(data_dict,temp_file_path)
+	# init_table(index_client, conn, cursor)
 	try:
 		load_data_to_mysql(conn, cursor)
 		num = math.ceil(len(data_dict) / batch_size)
