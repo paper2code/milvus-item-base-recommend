@@ -1,3 +1,4 @@
+bert-serving-client
 pymilvus==0.2.14
 pymysql
 fastapi

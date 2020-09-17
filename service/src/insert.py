@@ -26,19 +26,27 @@ def record_temp_file(data_dict,temp_file_path):
 			f.write(line)
 
 
-def read_data(data_path):		
+def read_data(data_path, data_rows):		
 	data_dict = [json.loads(line) for line in open(data_path, 'r')]
 	for data in data_dict:
 		data['link'] = 'https://arxiv.org/pdf/' + data['id'] + '.pdf'		
-		data['id'] = data['id'].replace('.','')
+		data['id'] = data_rows
+		# data['id'] = data['id'].replace('.','')
 		data['title'] = data['title'].replace('\n',' ').strip(' ')
 		data['abstract'] = data['abstract'].replace('\n',' ').strip(' ')
 		data['categories'] = data['categories'][0]
+		data_rows = data_rows + 1
 	return data_dict
 
+def milvus_collection_data(client):
+	try:
+		rows = client.count_entities(collection_name=TABLE_NAME)[1]
+	except Exception as e:
+		print("get milvus rows error:", e)
 
 def do_insert(data_path,index_client, conn, cursor, bc):
-	data_dict = read_data(data_path)
+	data_rows = milvus_collection_data(index_client)
+	data_dict = read_data(data_path, data_rows)
 	record_temp_file(data_dict,temp_file_path)
 	init_table(index_client, conn, cursor)
 	try:
