@@ -29,6 +29,7 @@ def record_temp_file(data_dict,temp_file_path):
 def read_data(data_path, data_rows):		
 	data_dict = [json.loads(line) for line in open(data_path, 'r')]
 	for data in data_dict:
+		print("data", data)
 		data['link'] = 'https://arxiv.org/pdf/' + data['id'] + '.pdf'		
 		data['id'] = data_rows
 		# data['id'] = data['id'].replace('.','')
@@ -36,6 +37,7 @@ def read_data(data_path, data_rows):
 		data['abstract'] = data['abstract'].replace('\n',' ').strip(' ')
 		data['categories'] = data['categories'][0]
 		data_rows = data_rows + 1
+		print("data-processed", data)
 	return data_dict
 
 def milvus_collection_data(client):

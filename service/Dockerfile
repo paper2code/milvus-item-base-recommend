@@ -4,10 +4,12 @@ RUN apt-get update && \
     apt-get install -y nano bash jq git ca-certificates gcc g++ wget python3-dev python3-pip unzip
 
 WORKDIR /opt/service
-COPY . .
+COPY requirements.txt .
 
 RUN pip3 install -U pip && \
     pip3 install -r requirements.txt
+
+COPY . .
 
 #RUN mkdir -p /opt/service/model \
 #    && cd /opt/service/model \
