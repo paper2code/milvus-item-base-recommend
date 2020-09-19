@@ -23,6 +23,7 @@ def insert_data(data_path):
         status = do_insert(data_path,index_client, conn, cursor, bc)
         return "{0}".format(status)
     except Exception as e:
+        print(e)
         return "{0}".format(e)
 
 def main():
